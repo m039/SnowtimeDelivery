@@ -72,6 +72,8 @@ namespace Game1
 		public KeyboardState oldks;
 		public GamePadState? oldgs;
 		public Snow snow = new Snow(640f, 640f, 10);
+	
+		private bool _isMusicStarted = false;
 
 		public Game1() {
 			_graphics = new GraphicsDeviceManager(this);
@@ -107,9 +109,14 @@ namespace Game1
 			}
 
 			song = Content.Load<Song>("snd/Slow Stride Loop");
-			MediaPlayer.IsRepeating = true;
-			MediaPlayer.Play(song);
-			jumpSfx = Content.Load<SoundEffect>("snd/jump");
+
+#if !BLAZORGL
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(song);
+			_isMusicStarted = true;
+#endif
+
+            jumpSfx = Content.Load<SoundEffect>("snd/jump");
 			hitSfx = Content.Load<SoundEffect>("snd/hit");
 			pickupSfx = Content.Load<SoundEffect>("snd/pickup");
 			levelWinSfx = Content.Load<SoundEffect>("snd/levelWin");
@@ -149,6 +156,13 @@ namespace Game1
 			if (gamestate == GameState.WelcomeScreen) {
 				if (InputSystem.IsAnyButtonDown()) {
 					gamestate = GameState.Playing;
+
+					if (!_isMusicStarted)
+					{
+                        MediaPlayer.IsRepeating = true;
+                        MediaPlayer.Play(song);
+                        _isMusicStarted = true;
+					}
 				}
 			}
 			else if (gamestate == GameState.EndScreen) {

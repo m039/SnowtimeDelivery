@@ -409,3 +409,9 @@
 #begin levels/level_12.txt
 /copy:levels/level_12.txt
 
+#begin snd/Juhani Junkala [Retro Game Music Pack] Level 1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:snd/Juhani Junkala [Retro Game Music Pack] Level 1.mp3
+
