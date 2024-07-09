@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>e054b89d-530e-4180-b940-eddf6c9153ec</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>SnowtimeDelivery</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Actor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Camera.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Fire.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Ghosty.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IceSpike.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)InputSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IOSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LetterBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Level.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RectangleExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rectf.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Snow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Snowman.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SpriteAnimation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tiles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Walker.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Directory.Build.props" />
+  </ItemGroup>
+</Project>

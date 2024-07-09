@@ -1,0 +1,63 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35004.147
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SnowtimeDelivery", "SnowtimeDelivery", "{104E1D97-2C91-4761-A322-A4ABE2806B8F}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SnowtimeDelivery.Shared", "SnowtimeDelivery\SnowtimeDelivery.Shared\SnowtimeDelivery.Shared.shproj", "{E054B89D-530E-4180-B940-EDDF6C9153EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnowtimeDelivery.Android", "SnowtimeDelivery\SnowtimeDelivery.Android\SnowtimeDelivery.Android.csproj", "{9B23660C-F6A6-4B5C-8E39-F4B49DF6AEE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnowtimeDelivery.WindowsDX", "SnowtimeDelivery\SnowtimeDelivery.WindowsDX\SnowtimeDelivery.WindowsDX.csproj", "{01BD6C24-30A9-452A-A692-C92E38516B55}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnowtimeDelivery.DesktopGL", "SnowtimeDelivery\SnowtimeDelivery.DesktopGL\SnowtimeDelivery.DesktopGL.csproj", "{01C6793B-6949-48C8-87EB-1AF549AFA881}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnowtimeDelivery.BlazorGL", "SnowtimeDelivery\SnowtimeDelivery.BlazorGL\SnowtimeDelivery.BlazorGL.csproj", "{B601C82E-6CF0-47C7-8323-9BB837042491}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9B23660C-F6A6-4B5C-8E39-F4B49DF6AEE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B23660C-F6A6-4B5C-8E39-F4B49DF6AEE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B23660C-F6A6-4B5C-8E39-F4B49DF6AEE4}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{9B23660C-F6A6-4B5C-8E39-F4B49DF6AEE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B23660C-F6A6-4B5C-8E39-F4B49DF6AEE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B23660C-F6A6-4B5C-8E39-F4B49DF6AEE4}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{01BD6C24-30A9-452A-A692-C92E38516B55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01BD6C24-30A9-452A-A692-C92E38516B55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01BD6C24-30A9-452A-A692-C92E38516B55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01BD6C24-30A9-452A-A692-C92E38516B55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01C6793B-6949-48C8-87EB-1AF549AFA881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01C6793B-6949-48C8-87EB-1AF549AFA881}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01C6793B-6949-48C8-87EB-1AF549AFA881}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01C6793B-6949-48C8-87EB-1AF549AFA881}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B601C82E-6CF0-47C7-8323-9BB837042491}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B601C82E-6CF0-47C7-8323-9BB837042491}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B601C82E-6CF0-47C7-8323-9BB837042491}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B601C82E-6CF0-47C7-8323-9BB837042491}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E054B89D-530E-4180-B940-EDDF6C9153EC} = {104E1D97-2C91-4761-A322-A4ABE2806B8F}
+		{9B23660C-F6A6-4B5C-8E39-F4B49DF6AEE4} = {104E1D97-2C91-4761-A322-A4ABE2806B8F}
+		{01BD6C24-30A9-452A-A692-C92E38516B55} = {104E1D97-2C91-4761-A322-A4ABE2806B8F}
+		{01C6793B-6949-48C8-87EB-1AF549AFA881} = {104E1D97-2C91-4761-A322-A4ABE2806B8F}
+		{B601C82E-6CF0-47C7-8323-9BB837042491} = {104E1D97-2C91-4761-A322-A4ABE2806B8F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C1948CE4-0E23-43E6-B589-FB204D9A1A07}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		SnowtimeDelivery\SnowtimeDelivery.Shared\SnowtimeDelivery.Shared.projitems*{01bd6c24-30a9-452a-a692-c92e38516b55}*SharedItemsImports = 5
+		SnowtimeDelivery\SnowtimeDelivery.Shared\SnowtimeDelivery.Shared.projitems*{01c6793b-6949-48c8-87eb-1af549afa881}*SharedItemsImports = 5
+		SnowtimeDelivery\SnowtimeDelivery.Shared\SnowtimeDelivery.Shared.projitems*{9b23660c-f6a6-4b5c-8e39-f4b49df6aee4}*SharedItemsImports = 5
+		SnowtimeDelivery\SnowtimeDelivery.Shared\SnowtimeDelivery.Shared.projitems*{b601c82e-6cf0-47c7-8323-9bb837042491}*SharedItemsImports = 5
+		SnowtimeDelivery\SnowtimeDelivery.Shared\SnowtimeDelivery.Shared.projitems*{e054b89d-530e-4180-b940-eddf6c9153ec}*SharedItemsImports = 13
+	EndGlobalSection
+EndGlobal
