@@ -71,6 +71,8 @@
     <script src="_content/nkast.Wasm.Audio/js/Audio.8.0.0.js"></script>
 
     <script>
+        
+
         function tickJS()
         {
             window.theInstance.invokeMethod('TickDotNet');
@@ -91,6 +93,29 @@
             
             // begin game loop
             window.requestAnimationFrame(tickJS);
+
+            function updateAspectRatio() {
+                var windowWidth = window.innerWidth;
+                var windowHeight = window.innerHeight;
+                var containerAspectRatio = 1200.0 / 720.0;
+
+                if (windowWidth / windowHeight > containerAspectRatio) {
+                    canvas.style.width = windowHeight * containerAspectRatio + "px";
+                    canvas.style.height = "100vh";
+                } else {
+                    canvas.style.width = "100vw";
+                    canvas.style.height = windowWidth / containerAspectRatio + "px";
+                }
+
+                canvas.style.margin = "auto";
+                canvas.style.top = "0";
+                canvas.style.left = "0";
+                canvas.style.bottom = "0";
+                canvas.style.right = "0";
+            }
+
+            updateAspectRatio();
+            window.addEventListener("resize", updateAspectRatio);
         };
 
         window.onkeydown = function(event)

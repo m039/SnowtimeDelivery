@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 namespace Game1
 {
 	public class Camera
@@ -14,10 +15,17 @@ namespace Game1
 		public Matrix GetProjectionMatrix(int iviewportWidth, int iviewportHeight) {
 			float viewportWidth = (float)iviewportWidth;
 			float viewportHeight = (float)iviewportHeight;
-			Vector2 toTopLeftCorner = 0.5f * new Vector2(viewportWidth, viewportHeight);
+
+            Vector2 toTopLeftCorner = 0.5f * new Vector2(viewportWidth, viewportHeight);
 			float viewportWByH = viewportWidth / viewportHeight;
 
-			float viewWidthWs = viewHeigthWs * viewportWByH;
+#if BLAZORGL
+			float sw = (float)Consts.ScreenWidth;
+			float sh = (float)Consts.ScreenHeight;
+			viewportWByH = sw / sh;
+#endif
+
+            float viewWidthWs = viewHeigthWs * viewportWByH;
 
 			camScaleX = viewportWidth / viewWidthWs;
 			camScaleY = viewportHeight / viewHeigthWs;
@@ -28,7 +36,6 @@ namespace Game1
 			viewRectWs.Y = topLeftCornerWs.Y;
 			viewRectWs.Width = viewWidthWs;
 			viewRectWs.Height = viewHeigthWs;
-
 
 			Matrix proj = Matrix.CreateTranslation(-pos.X, -pos.Y, 0f) * Matrix.CreateScale(camScaleX, camScaleY, 1f) * Matrix.CreateTranslation(toTopLeftCorner.X, toTopLeftCorner.Y, 0f);
 

@@ -77,14 +77,17 @@ namespace Game1
 
 		public Game1() {
 			_graphics = new GraphicsDeviceManager(this);
-			_graphics.PreferredBackBufferWidth = 1200;
-			_graphics.PreferredBackBufferHeight = 720;
+#if !BLAZORGL
+			_graphics.PreferredBackBufferWidth = Consts.ScreenWidth;
+			_graphics.PreferredBackBufferHeight = Consts.ScreenHeight;
+#endif
 			_graphics.ApplyChanges();
+
 			Content.RootDirectory = "Content";
 			IsMouseVisible = true;
 
 			Window.AllowUserResizing = true;
-
+			
 			welcomScreenCamera.viewHeigthWs = 560f;
 			endScreenCamera.viewHeigthWs = 220f;
 		}
