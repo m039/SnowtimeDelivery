@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Ghosty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IceSpike.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InputSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)InstantGamesBridge.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IOSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LetterBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Level.cs" />

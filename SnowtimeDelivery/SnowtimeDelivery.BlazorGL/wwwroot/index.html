@@ -31,34 +31,44 @@
     </div>
 
     <script src="_framework/blazor.webassembly.js" autostart="false"></script>
+    <script src="js/instant-games-bridge.js"></script>
+
     <script type="module">
         import { BrotliDecode } from './js/decode.min.js';
         // Set this to enable Brotli (.br) decompression on static webServers
         // that don't support content compression and http://.
+
         var enableBrotliDecompression = false;
-        Blazor.start({
-            loadBootResource: function (type, name, defaultUri, integrity)
-            {
-                if (enableBrotliDecompression === true && type !== 'dotnetjs' && location.hostname !== 'localhost')
-                {
-                    return (async function()
-                    {
-                        const response = await fetch(defaultUri + '.br', { cache: 'no-cache' });
-                        if (!response.ok)
-                            throw new Error(response.statusText);
-                        const originalResponseBuffer = await response.arrayBuffer();
-                        const originalResponseArray = new Int8Array(originalResponseBuffer);
-                        const contentType = (type === 'dotnetwasm')
-                                          ? 'application/wasm'
-                                          : 'application/octet-stream';
-                        const decompressedResponseArray = BrotliDecode(originalResponseArray);
-                        return new Response(decompressedResponseArray,
-                                            { headers: { 'content-type': contentType }
-                                   });
-                    })();
-                }
-            }
-        });
+
+        bridge.initialize()
+            .then(() => {
+                bridge.game.on(bridge.EVENT_NAME.VISIBILITY_STATE_CHANGED,
+                    state => {
+                        window.theInstance.invokeMethod('OnVisibilityStateChanged', state);
+                    });
+
+                Blazor.start({
+                    loadBootResource: function (type, name, defaultUri, integrity) {
+                        if (enableBrotliDecompression === true && type !== 'dotnetjs' && location.hostname !== 'localhost') {
+                            return (async function () {
+                                const response = await fetch(defaultUri + '.br', { cache: 'no-cache' });
+                                if (!response.ok)
+                                    throw new Error(response.statusText);
+                                const originalResponseBuffer = await response.arrayBuffer();
+                                const originalResponseArray = new Int8Array(originalResponseBuffer);
+                                const contentType = (type === 'dotnetwasm')
+                                    ? 'application/wasm'
+                                    : 'application/octet-stream';
+                                const decompressedResponseArray = BrotliDecode(originalResponseArray);
+                                return new Response(decompressedResponseArray,
+                                    {
+                                        headers: { 'content-type': contentType }
+                                    });
+                            })();
+                        }
+                    }
+                });
+            });
     </script>
 
     <script src="_content/nkast.Wasm.Dom/js/JSObject.8.0.0.js"></script>
@@ -71,7 +81,13 @@
     <script src="_content/nkast.Wasm.Audio/js/Audio.8.0.0.js"></script>
 
     <script>
-        
+        function bridgePlatformId() {
+            return bridge.platform.id;
+        }
+
+        function bridgeGameVisibilityState() {
+            return bridge.game.visibilityState;
+        }
 
         function tickJS()
         {

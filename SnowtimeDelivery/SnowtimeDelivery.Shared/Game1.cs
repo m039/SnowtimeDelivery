@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
+using InstantGamesBridge;
 
 namespace Game1
 {
@@ -75,7 +76,20 @@ namespace Game1
 	
 		private bool _isMusicStarted = false;
 
-		public Game1() {
+		public IBridge bridge;
+
+		public System.Action onStart;
+
+		bool _onStartCalled = false;
+
+		public Game1(IBridge bridge = null) {
+			this.bridge = bridge;
+
+			if (bridge != null)
+			{
+				bridge.game.onVisibilityStateCahged += OnVisibilityStateChanged;
+			}
+
 			_graphics = new GraphicsDeviceManager(this);
 #if !BLAZORGL
 			_graphics.PreferredBackBufferWidth = Consts.ScreenWidth;
@@ -152,8 +166,32 @@ namespace Game1
 			walkerAnim = SpriteAnimation.Load("walkAndBad", Content);
 		}
 
+		void OnStart()
+		{
+			if (bridge == null)
+				return;
+		}
+
+		void OnVisibilityStateChanged(VisibilityState visibilityState)
+		{
+            if (visibilityState == VisibilityState.Visible)
+			{
+				MediaPlayer.Resume();
+            } else
+			{
+				MediaPlayer.Pause();
+            }
+        }
+
 		// Logic update.
 		protected override void Update(GameTime gameTime) {
+			if (!_onStartCalled)
+			{
+				onStart?.Invoke();
+				OnStart();
+				_onStartCalled = true;
+			}
+
 			float dt = (float)(gameTime.ElapsedGameTime.TotalSeconds);
 
 			if (gamestate == GameState.WelcomeScreen) {
