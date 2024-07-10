@@ -64,6 +64,8 @@ namespace SnowtimeDelivery.Pages
             }
 
             public string id => bridge.JsSync.Invoke<string>("bridgePlatformId");
+
+            public string language => bridge.JsSync.Invoke<string>("bridgePlatformLanguage");
         }
 
         public class GameModule : IGameModule

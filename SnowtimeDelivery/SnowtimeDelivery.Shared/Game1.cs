@@ -88,7 +88,13 @@ namespace Game1
 			if (bridge != null)
 			{
 				bridge.game.onVisibilityStateCahged += OnVisibilityStateChanged;
-			}
+
+				if (bridge.platform.language == "ru")
+				{
+                    System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("ru-RU");
+                    System.Threading.Thread.CurrentThread.CurrentCulture = ci;
+                }
+            }
 
 			_graphics = new GraphicsDeviceManager(this);
 #if !BLAZORGL
@@ -138,8 +144,8 @@ namespace Game1
 			pickupSfx = Content.Load<SoundEffect>("snd/pickup");
 			levelWinSfx = Content.Load<SoundEffect>("snd/levelWin");
 
-			welcomeTex = Content.Load<Texture2D>("welcomeImage");
-			gameCompleteTex = Content.Load<Texture2D>("gameComplete");
+			welcomeTex = Content.LoadLocalized<Texture2D>("welcomeImage");
+			gameCompleteTex = Content.LoadLocalized<Texture2D>("gameComplete");
 
 			snowmanDeadTex = Content.Load<Texture2D>("snowman_dead");
 			snowmandCrouchTex = Content.Load<Texture2D>("snowman_crouch");

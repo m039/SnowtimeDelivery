@@ -8,6 +8,8 @@ namespace InstantGamesBridge
     public interface IPlatformModule
     {
         string id { get; }
+
+        string language { get; }
     }
 
     public interface IGameModule
