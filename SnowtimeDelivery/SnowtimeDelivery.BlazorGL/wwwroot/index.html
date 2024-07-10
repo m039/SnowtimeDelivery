@@ -4,20 +4,23 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>SnowtimeDelivery</title>
+    <title>Snowtime Delivery</title>
     <base href="./" />
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
+    <link href="css/index.css" rel="stylesheet" />
     <link href="SnowtimeDelivery.styles.css" rel="stylesheet" />
 </head>
 
 <body>
 
     <div id="app">
-        <div id="loading" style="display: table-cell; margin: auto; width:100vw; height:100vh; vertical-align: middle; background: #ffcc10;">
-            <div style="display: block; margin: auto; width: 9em; color: white;font-family: 'Segoe UI', sans-serif;">
-            <div style="text-align: center; font-size: 0.85em;">Made with<br/><a href="https://github.com/kniEngine/kni"><img src="kni.png" border="0" alt="Kni"></a></div>
-            <div style="text-align: center; font-size: 1.8em;">loading&nbsp;<marquee style="width:0.9em; vertical-align: bottom;">.&nbsp;.&nbsp;.&nbsp;&nbsp;&nbsp;</marquee></div>
+        <div id="loading" style="display: table-cell; margin: auto; width:100vw; height:100vh; vertical-align: middle; background: rgb(5, 5, 5);">
+            <img src="images/MadeWithKNI.png" border="0" style="position:absolute; bottom:4vw; left: 2vh;"/>
+            <div style="display: flex; flex-direction: column; align-items: center; margin: auto; text-align: center;">
+                <img src="images/Logo.png" style="width: 150px; height: 150px " border="0" />
+                <span class="loader" style="margin-top: 15px;"></span>
+            </div>
         </div>
     </div>
 
