@@ -1,5 +1,6 @@
 using Game1;
 using InstantGamesBridge;
+using m039;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,7 @@ namespace SnowtimeDelivery.Pages
 
                 _bride = new Bridge(this);
 
-                _game = new Game1.Game1(_bride);
+                _game = new Game1.Game1(_bride, new YandexMetrika(this));
                 _game.onStart += () => Console.SetOut(previousOut);
                 _game.Run();
             }
@@ -163,6 +164,23 @@ namespace SnowtimeDelivery.Pages
             public IDeviceModule device => _device;
 
             public ILeaderboardModule leaderboard => _leaderboard;
+        }
+
+        public class YandexMetrika : IYandexMetrika
+        {
+            readonly Index _index;
+
+            public YandexMetrika(Index index) => _index = index;
+
+            public void hit(string str)
+            {
+                _index.JsRuntime.InvokeVoidAsync("ymHit", str);
+            }
+
+            public void reachGoal(string str)
+            {
+                _index.JsRuntime.InvokeVoidAsync("ymReachGoal", str);
+            }
         }
     }
 

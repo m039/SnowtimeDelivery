@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Media;
 using InstantGamesBridge;
 using Microsoft.Xna.Framework.Input.Touch;
 using System.Linq.Expressions;
+using m039;
 
 namespace Game1
 {
@@ -84,14 +85,17 @@ namespace Game1
 
 		public IBridge bridge;
 
+		public IYandexMetrika metrika;
+
 		public System.Action onStart;
 
 		bool _onStartCalled = false;
 
 		public static bool isMobile = false;
 
-		public Game1(IBridge bridge = null) {
+		public Game1(IBridge bridge = null, IYandexMetrika metrika = null) {
 			this.bridge = bridge;
+			this.metrika = metrika;
 
 			if (bridge != null)
 			{

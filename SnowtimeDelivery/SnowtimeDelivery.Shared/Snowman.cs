@@ -240,6 +240,11 @@ namespace Game1
 						u.level.isComplete = true;
 						u.game.levelWinSfx.Play();
 
+						if (u.game.metrika != null)
+						{
+							u.game.metrika.reachGoal("levelComplete" + (u.game.currentLevel + 1));
+						}
+
 						if (u.game.bridge != null && u.game.bridge.leaderboard.isSupported)
 						{
 							if (u.game.bridge.platform.id == "yandex")

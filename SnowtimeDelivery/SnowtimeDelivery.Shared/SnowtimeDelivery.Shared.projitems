@@ -28,6 +28,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SpriteAnimation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tiles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Walker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)YandexMetrika.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Directory.Build.props" />

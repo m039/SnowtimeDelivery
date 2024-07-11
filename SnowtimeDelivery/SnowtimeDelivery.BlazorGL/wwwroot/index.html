@@ -13,10 +13,31 @@
 </head>
 
 <body>
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (m, e, t, r, i, k, a) {
+            m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+            m[i].l = 1 * new Date();
+            for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
+            k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+        })
+            (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        window.ymKey = 97806988;
+
+        ym(window.ymKey, "init", {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true
+        });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/97806988" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
 
     <div id="app">
         <div id="loading" style="display: table-cell; margin: auto; width:100vw; height:100vh; vertical-align: middle; background: rgb(5, 5, 5);">
-            <img src="images/MadeWithKNI.png" border="0" style="position:absolute; bottom:4vw; left: 2vh;"/>
+            <img src="images/MadeWithKNI.png" border="0" style="position:absolute; bottom:4vw; left: 2vh;" />
             <div style="display: flex; flex-direction: column; align-items: center; margin: auto; text-align: center;">
                 <img src="images/Logo.png" style="width: 150px; height: 150px " border="0" />
                 <span class="loader" style="margin-top: 15px;"></span>
@@ -109,14 +130,20 @@
             return bridge.leaderboard.isSupported;
         }
 
-        function tickJS()
-        {
+        function ymHit(url) {
+            ym(window.ymKey, 'hit', url);
+        }
+
+        function ymReachGoal(target) {
+            ym(window.ymKey, 'reachGoal', target);
+        }
+
+        function tickJS() {
             window.theInstance.invokeMethod('TickDotNet');
             window.requestAnimationFrame(tickJS);
         }
 
-        window.initRenderJS = (instance) =>
-        {
+        window.initRenderJS = (instance) => {
             window.theInstance = instance;
 
             // set initial canvas size
@@ -169,7 +196,7 @@
                 },
                 false,
             );
-            
+
             // begin game loop
             window.requestAnimationFrame(tickJS);
 
@@ -197,15 +224,13 @@
             window.addEventListener("resize", updateAspectRatio);
         };
 
-        window.onkeydown = function(event)
-        {
+        window.onkeydown = function (event) {
             // Prevent Arrows Keys and Spacebar scrolling the outer page
             // when running inside an iframe. e.g: itch.io embedding.
             if ([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1)
                 event.preventDefault();
         };
-        window.onmousewheel = function(event)
-        {
+        window.onmousewheel = function (event) {
             // Prevent Mousewheel scrolling the outer page
             // when running inside an iframe. e.g: itch.io embedding.
             event.preventDefault();
