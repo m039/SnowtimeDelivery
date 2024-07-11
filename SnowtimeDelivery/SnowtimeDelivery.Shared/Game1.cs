@@ -1,15 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 using InstantGamesBridge;
-using Microsoft.Xna.Framework.Input.Touch;
-using System.Linq.Expressions;
 using m039;
 
 namespace Game1
@@ -714,8 +710,6 @@ namespace Game1
 					var color = Color.White * 0.5f;
                     _spriteBatch.Draw(button, rectangle, color);
                 }
-
-				// var m = Matrix.CreateScale((float) GraphicsDevice.Viewport.Width / Consts.ScreenWidth, (float) GraphicsDevice.Viewport.Height / Consts.ScreenHeight, 1f);
 
                 _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, RasterizerState.CullNone, null);
 				// Left button.
