@@ -91,11 +91,15 @@ namespace Game1
 
 		bool _onStartCalled = false;
 
-		public static bool isMobile = false;
+		readonly FPSCounter _fpsCounter;
+
+        public static bool isMobile = false;
 
 		public Game1(IBridge bridge = null, IYandexMetrika metrika = null) {
 			this.bridge = bridge;
 			this.metrika = metrika;
+
+			_fpsCounter = new FPSCounter(this);
 
 			if (bridge != null)
 			{
@@ -315,7 +319,9 @@ namespace Game1
 			InputSystem.Update();
 
 			base.Update(gameTime);
-		}
+
+            _fpsCounter.Update(gameTime);
+        }
 
 		// Generic Draw.
 		protected override void Draw(GameTime gameTime) {
@@ -347,33 +353,8 @@ namespace Game1
 
 			base.Draw(gameTime);
 
-#if false
-            if (isMobile)
-			{
-				var str = "Logs:\n";
-
-				str += InputSystem.GetLog();
-
-				//str += "Touches:\n";
-
-				//str += "is gesture available: " + TouchPanel.IsGestureAvailable + "\n";
-
-				//foreach (var touch in TouchPanel.GetState())
-				//{
-				//	str += touch.State.ToString() + "\n";
-				//}
-
-				//str += "Mouse:\n";
-				//str += Mouse.GetState().LeftButton + "\n";
-
-				_spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, RasterizerState.CullNone, null);
-				_spriteBatch.DrawString(spriteFont, str, new Vector2(100, 100), Color.White);
-				_spriteBatch.End();
-			}
-#endif
+			_fpsCounter.Draw();
         }
-
-		public static List<string> logs = new();
 
 		// Draw the Level.
 		protected void DrawLevel(GameTime gameTime) {
@@ -748,5 +729,47 @@ namespace Game1
                 _spriteBatch.End();
             }
         }
+
+		public class FPSCounter
+		{
+			readonly Game1 _game;
+
+			public bool enabled = false;
+
+			float _fps = 0f;
+
+			bool _keyPressedPrevious;
+
+            public FPSCounter(Game1 game) => _game = game;
+
+            public void Update(GameTime gameTime)
+			{
+				var keyPressed = Keyboard.GetState().IsKeyDown(Keys.F);
+
+                if (keyPressed && !_keyPressedPrevious)
+                {
+					enabled = !enabled;
+                }
+
+                _keyPressedPrevious = keyPressed;
+
+				if (!enabled)
+					return;
+
+				_fps = (float) (1 / gameTime.ElapsedGameTime.TotalSeconds);
+			}
+
+			public void Draw()
+			{
+				if (!enabled)
+					return;
+
+				var h = _game.GraphicsDevice.Viewport.Height;
+
+                _game._spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, RasterizerState.CullNone, null);
+                _game._spriteBatch.DrawString(_game.spriteFont, "FPS: " + _fps, new Vector2(20, h - 40), Color.White);
+                _game._spriteBatch.End();
+            }
+		}
 	}
 }
