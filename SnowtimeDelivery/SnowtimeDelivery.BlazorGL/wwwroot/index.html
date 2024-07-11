@@ -93,6 +93,10 @@
             return bridge.game.visibilityState;
         }
 
+        function bridgeDeviceType() {
+            return bridge.device.type;
+        }
+
         function tickJS()
         {
             window.theInstance.invokeMethod('TickDotNet');
@@ -110,6 +114,41 @@
             canvas.height = holder.clientHeight;
             // disable context menu on right click
             canvas.addEventListener("contextmenu", e => e.preventDefault());
+
+            window.theInstance.invokeMethod('OnTouchStart', 0, 0, 0);
+
+            holder.addEventListener(
+                "touchstart",
+                (ev) => {
+                    for (let i = 0; i < ev.touches.length; i++) {
+                        let t = ev.touches[i];
+                        window.theInstance.invokeMethod('OnTouchStart', t.identifier, t.clientX, t.clientY);
+                    }
+                },
+                false,
+            );
+
+            holder.addEventListener(
+                "touchcancel",
+                (ev) => {
+                    for (let i = 0; i < ev.touches.length; i++) {
+                        let t = ev.touches[i];
+                        window.theInstance.invokeMethod('OnTouchCancel', t.identifier);
+                    }
+                },
+                false,
+            );
+
+            holder.addEventListener(
+                "touchend",
+                (ev) => {
+                    for (let i = 0; i < ev.touches.length; i++) {
+                        let t = ev.touches[i];
+                        window.theInstance.invokeMethod('OnTouchCancel', t.identifier);
+                    }
+                },
+                false,
+            );
             
             // begin game loop
             window.requestAnimationFrame(tickJS);

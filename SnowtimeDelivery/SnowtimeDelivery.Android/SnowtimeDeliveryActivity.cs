@@ -18,7 +18,7 @@ namespace SnowtimeDelivery
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-            var game = new SnowtimeDeliveryGame();
+            var game = new Game1.Game1();
             SetContentView((View)game.Services.GetService(typeof(View)));
             game.Run();
         }

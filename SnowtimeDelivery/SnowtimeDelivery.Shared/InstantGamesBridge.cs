@@ -5,6 +5,16 @@ namespace InstantGamesBridge
         Hidden, Visible
     }
 
+    public enum DeviceType
+    {
+        Desktop, Mobile, Tablet, TV
+    }
+
+    public interface IDeviceModule
+    {
+        public DeviceType type { get; }
+    }
+
     public interface IPlatformModule
     {
         string id { get; }
@@ -24,5 +34,7 @@ namespace InstantGamesBridge
         IPlatformModule platform { get; }
 
         IGameModule game { get; }
+
+        IDeviceModule device { get; }
     }
 }

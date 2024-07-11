@@ -130,7 +130,7 @@ namespace Game1
 
 			// Input, don't take it if the level is complete.
 
-			if (InputSystem.IsResetButtonDown(u.game.oldks)) {
+			if (InputSystem.IsResetButtonDown()) {
 				u.level.isComplete = true;
 				u.level.timeSpentComplete = 100f;
 			}
@@ -157,8 +157,8 @@ namespace Game1
 					_isFacingRight = k > 0f;
 				}
 
-				bool isJumpBtnPressed = InputSystem.IsJumpButtonDown(u.game.oldks, u.game.oldgs);
-				bool isJumpBtnReleased = InputSystem.IsJumpButtonUp(u.game.oldks, u.game.oldgs);
+				bool isJumpBtnPressed = InputSystem.IsJumpButtonDown();
+				bool isJumpBtnReleased = InputSystem.IsJumpButtonUp();
 
 				if ((timeSpentInAir < 0.15f || jumpCounter == 1) && isJumpBtnPressed) {
 					// pressed

@@ -6,5 +6,6 @@ namespace Game1
 
         public const int ScreenWidth = 1200;
         public const int ScreenHeight = 720;
+        public const float Aspect = (float)ScreenWidth / ScreenHeight;
     }
 }

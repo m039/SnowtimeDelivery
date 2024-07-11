@@ -8,6 +8,8 @@ using System.IO;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 using InstantGamesBridge;
+using Microsoft.Xna.Framework.Input.Touch;
+using System.Linq.Expressions;
 
 namespace Game1
 {
@@ -51,12 +53,18 @@ namespace Game1
 		private Texture2D letterBoxPromptTex;
 		private Texture2D letterBoxPromptReadyTex;
 		private Texture2D letterTex;
+		private Texture2D buttonLeft;
+        private Texture2D buttonRight;
+        private Texture2D buttonUp;
+        private Texture2D buttonDown;
 
-		public SpriteAnimation snowmanWalkAnim;
+        public SpriteAnimation snowmanWalkAnim;
 		public SpriteAnimation timeswitchBlueAnim;
 		public SpriteAnimation timeswitchRedAnim;
 		public SpriteAnimation fileAnim;
 		public SpriteAnimation walkerAnim;
+
+		private SpriteFont spriteFont;
 
 		private Song song;
 		public SoundEffect jumpSfx;
@@ -70,8 +78,6 @@ namespace Game1
 		List<string> allLevelFilenames = new List<string>();
 
 		private Level level;
-		public KeyboardState oldks;
-		public GamePadState? oldgs;
 		public Snow snow = new Snow(640f, 640f, 10);
 	
 		private bool _isMusicStarted = false;
@@ -81,6 +87,8 @@ namespace Game1
 		public System.Action onStart;
 
 		bool _onStartCalled = false;
+
+		public static bool isMobile = false;
 
 		public Game1(IBridge bridge = null) {
 			this.bridge = bridge;
@@ -94,7 +102,13 @@ namespace Game1
                     System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("ru-RU");
                     System.Threading.Thread.CurrentThread.CurrentCulture = ci;
                 }
+
+				isMobile = bridge.device.type == DeviceType.Mobile;
             }
+
+#if ANDROID
+			isMobile = true;
+#endif
 
 			_graphics = new GraphicsDeviceManager(this);
 #if !BLAZORGL
@@ -121,6 +135,7 @@ namespace Game1
 			base.Initialize();
 		}
 
+
 		protected override void LoadContent() {
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -131,45 +146,81 @@ namespace Game1
 				whiteTex1.SetData(data);
 			}
 
-			song = Content.Load<Song>("snd/Slow Stride Loop");
+			T load<T>(string name) {
+				try
+				{
+					return Content.Load<T>(name);
+				} catch (Exception e)
+				{
+					Console.WriteLine("Can't load " + name);
+				}
+
+				return default;
+			}
+
+            T loadLocalized<T>(string name)
+            {
+                try
+                {
+                    return Content.LoadLocalized<T>(name);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Can't load " + name);
+                }
+
+                return default;
+            }
+
+
+            song = Content.Load<Song>("snd/Slow Stride Loop");
 
 #if !BLAZORGL
-            MediaPlayer.IsRepeating = true;
-            MediaPlayer.Play(song);
+			MediaPlayer.IsRepeating = true;
+			MediaPlayer.Play(song);
 			_isMusicStarted = true;
 #endif
+			spriteFont = load<SpriteFont>("Arial");
 
-            jumpSfx = Content.Load<SoundEffect>("snd/jump");
-			hitSfx = Content.Load<SoundEffect>("snd/hit");
-			pickupSfx = Content.Load<SoundEffect>("snd/pickup");
-			levelWinSfx = Content.Load<SoundEffect>("snd/levelWin");
+            jumpSfx = load<SoundEffect>("snd/jump");
+			hitSfx = load<SoundEffect>("snd/hit");
+			pickupSfx = load<SoundEffect>("snd/pickup");
+			levelWinSfx = load<SoundEffect>("snd/levelWin");
 
-			welcomeTex = Content.LoadLocalized<Texture2D>("welcomeImage");
-			gameCompleteTex = Content.LoadLocalized<Texture2D>("gameComplete");
+			welcomeTex = loadLocalized<Texture2D>("welcomeImage");
+			gameCompleteTex = loadLocalized<Texture2D>("gameComplete");
 
-			snowmanDeadTex = Content.Load<Texture2D>("snowman_dead");
-			snowmandCrouchTex = Content.Load<Texture2D>("snowman_crouch");
-			snowmandWinTex = Content.Load<Texture2D>("snowman_win");
-			tileTex = Content.Load<Texture2D>("tile");
-			cityTex = Content.Load<Texture2D>("city");
-			mountTex = Content.Load<Texture2D>("mount");
-			snowflake0 = Content.Load<Texture2D>("snowflake0");
-			jumpswitchYellowSolid = Content.Load<Texture2D>("yellowJumpSwitchSolid");
-			jumpswitchYellowPassable = Content.Load<Texture2D>("yellowJumpSwitchPassable");
-			_jumpSwitchGreenSolid = Content.Load<Texture2D>("greenJumpSwitchSolid");
-			_jumpSwitchGreenPassable = Content.Load<Texture2D>("greenJumpSwitchPassable");
-			_fireProjectileTex = Content.Load<Texture2D>("fireProjectile");
-			ghostyTex = Content.Load<Texture2D>("ghosty");
-			iceSpikeTex = Content.Load<Texture2D>("iceSpike");
-			letterBoxTex = Content.Load<Texture2D>("letterBox");
-			letterBoxPromptTex = Content.Load<Texture2D>("letterBoxPrompt");
-			letterBoxPromptReadyTex = Content.Load<Texture2D>("letterBoxPromptReady");
-			letterTex = Content.Load<Texture2D>("letter");
+			snowmanDeadTex = load<Texture2D>("snowman_dead");
+			snowmandCrouchTex = load<Texture2D>("snowman_crouch");
+			snowmandWinTex = load<Texture2D>("snowman_win");
+			tileTex = load<Texture2D>("tile");
+			cityTex = load<Texture2D>("city");
+			mountTex = load<Texture2D>("mount");
+			snowflake0 = load<Texture2D>("snowflake0");
+			jumpswitchYellowSolid = load<Texture2D>("yellowJumpSwitchSolid");
+			jumpswitchYellowPassable = load<Texture2D>("yellowJumpSwitchPassable");
+			_jumpSwitchGreenSolid = load<Texture2D>("greenJumpSwitchSolid");
+			_jumpSwitchGreenPassable = load<Texture2D>("greenJumpSwitchPassable");
+			_fireProjectileTex = load<Texture2D>("fireProjectile");
+			ghostyTex = load<Texture2D>("ghosty");
+			iceSpikeTex = load<Texture2D>("iceSpike");
+			letterBoxTex = load<Texture2D>("letterBox");
+			letterBoxPromptTex = load<Texture2D>("letterBoxPrompt");
+			letterBoxPromptReadyTex = load<Texture2D>("letterBoxPromptReady");
+			letterTex = load<Texture2D>("letter");
 			snowmanWalkAnim = SpriteAnimation.Load("snowman_walk", Content);
 			timeswitchBlueAnim = SpriteAnimation.Load("timeSwitchBlueAnim", Content);
 			timeswitchRedAnim = SpriteAnimation.Load("timeSwitchRedAnim", Content);
 			fileAnim = SpriteAnimation.Load("fire", Content);
 			walkerAnim = SpriteAnimation.Load("walkAndBad", Content);
+
+			if (isMobile)
+			{
+				buttonLeft = load<Texture2D>("buttonLeft");
+				buttonRight = load<Texture2D>("buttonRight");
+				buttonDown = load<Texture2D>("buttonDown");
+				buttonUp = load<Texture2D>("buttonUp");
+			}
 		}
 
 		void OnStart()
@@ -250,15 +301,13 @@ namespace Game1
 
 
 			// Cache the input state in order to find presses and releases.
-			oldks = Keyboard.GetState();
-			oldgs = InputSystem.GetCurrentGamePadState();
+			InputSystem.Update();
 
 			base.Update(gameTime);
 		}
 
 		// Generic Draw.
 		protected override void Draw(GameTime gameTime) {
-
 			GraphicsDevice.Clear(new Color(38f / 255f, 43f / 255f, 68f / 255f));
 
 			if (gamestate == GameState.WelcomeScreen) {
@@ -286,7 +335,28 @@ namespace Game1
 			}
 
 			base.Draw(gameTime);
-		}
+
+#if true
+			if (isMobile)
+			{
+				var str = "Touches:\n";
+
+				str += "is gesture available: " + TouchPanel.IsGestureAvailable + "\n";
+
+				foreach (var touch in TouchPanel.GetState())
+				{
+					str += touch.State.ToString() + "\n";
+				}
+
+				str += "Mouse:\n";
+				str += Mouse.GetState().LeftButton + "\n";
+
+				_spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, RasterizerState.CullNone, null);
+				_spriteBatch.DrawString(spriteFont, str, new Vector2(100, 100), Color.White);
+				_spriteBatch.End();
+			}
+#endif
+        }
 
 		// Draw the Level.
 		protected void DrawLevel(GameTime gameTime) {
@@ -552,6 +622,114 @@ namespace Game1
 					_spriteBatch.End();
 				}
 			}
-		}
+
+			if (isMobile)
+			{
+                const float size = 6;
+				var b = buttonLeft;
+                var ws = (float)GraphicsDevice.Viewport.Width / Consts.ScreenWidth;
+                var hs = (float)GraphicsDevice.Viewport.Height / Consts.ScreenHeight;
+                var w = GraphicsDevice.Viewport.Width / size;
+                var h = GraphicsDevice.Viewport.Height / size;
+                var bw = b.Width * ws;
+				var bh = b.Height * hs;
+				var hgap = 10f * hs;
+				var wgap = 10f * ws;
+				var bottomMargin = h - bh - hgap;
+
+                void drawButton(Texture2D button, Vector2 position)
+				{
+					var rectangle = new Rectangle(
+						(int)(position.X * size),
+						(int)(position.Y * size),
+						(int)(bw * size),
+						(int)(bh * size)
+					);
+
+                    float screenWidth;
+					float screenHeight;
+					float x0, y0, x1, y1;
+					Rectangle inputRectangle;
+
+                    if (GraphicsDevice.Viewport.Width > GraphicsDevice.Viewport.Height * Consts.Aspect)
+					{
+                        screenWidth = GraphicsDevice.Viewport.Height * Consts.Aspect;
+                        screenHeight = GraphicsDevice.Viewport.Height;
+
+						x0 = GraphicsDevice.Viewport.Width / 2f - screenWidth / 2f;
+						y0 = 0;
+						x1 = GraphicsDevice.Viewport.Width / 2f + screenWidth / 2f;
+						y1 = GraphicsDevice.Viewport.Height;
+
+                        float map(float value)
+                        {
+                            var v = value / GraphicsDevice.Viewport.Width;
+                            v = v * screenWidth;
+                            return v;
+                        }
+
+                        inputRectangle = new Rectangle(
+                            (int)(x0 + map(rectangle.X)),
+                            rectangle.Y,
+                            (int)map(rectangle.Width),
+                            rectangle.Height
+                        );
+                    } else
+					{
+						screenWidth = GraphicsDevice.Viewport.Width;
+						screenHeight = GraphicsDevice.Viewport.Width / Consts.Aspect;
+
+                        x0 = 0;
+                        y0 = GraphicsDevice.Viewport.Height / 2f - screenHeight / 2f;
+                        x1 = GraphicsDevice.Viewport.Width;
+                        y1 = GraphicsDevice.Viewport.Height / 2f + screenHeight / 2f;
+
+						float map(float value)
+						{
+							var v = value / GraphicsDevice.Viewport.Height;
+							v = v * screenHeight;
+							return v;
+						}
+
+						inputRectangle = new Rectangle(
+							rectangle.X,
+							(int) (y0 + map(rectangle.Y)),
+							rectangle.Width,
+							(int) map(rectangle.Height)
+						);
+                    }
+
+					if (button == buttonLeft)
+					{
+						InputSystem.buttonLeftInputRectangle = inputRectangle;
+					} else if (button == buttonRight)
+					{
+						InputSystem.buttonRightInputRectangle = inputRectangle;
+					} else if (button == buttonDown)
+					{
+						InputSystem.buttonDownInputRectangle = inputRectangle;
+					} else if (button == buttonUp)
+					{
+						InputSystem.buttonUpInputRectangle = inputRectangle;
+					}
+
+					var color = Color.White * 0.5f;
+                    _spriteBatch.Draw(button, rectangle, color);
+                }
+
+				// var m = Matrix.CreateScale((float) GraphicsDevice.Viewport.Width / Consts.ScreenWidth, (float) GraphicsDevice.Viewport.Height / Consts.ScreenHeight, 1f);
+
+                _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, RasterizerState.CullNone, null);
+				// Left button.
+				drawButton(buttonLeft, new Vector2(wgap, bottomMargin));
+				// Right button.
+				drawButton(buttonRight, new Vector2(wgap * 2f + bw, bottomMargin));
+				// Down button.
+				drawButton(buttonDown, new Vector2(w - bw * 2f - wgap * 2f, bottomMargin));
+                // Up button.
+                drawButton(buttonUp, new Vector2(w - bw - wgap, bottomMargin));
+                _spriteBatch.End();
+            }
+        }
 	}
 }
