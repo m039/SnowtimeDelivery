@@ -1,6 +1,6 @@
 # Snowtime Deliver
 
-This project is a demo of a short platformer made with XNA working in a browser. 
+This project is a good demo of working status of browser support for XNA, MonoGame and KNI.
 
 This is a KNI port of [the original game](https://github.com/ongamex/winter_game_csharp). The original game can't be played in a browser, but this port can. I also added support for web portals like Yandex Games.
 
