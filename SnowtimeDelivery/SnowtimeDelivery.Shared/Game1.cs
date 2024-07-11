@@ -74,7 +74,7 @@ namespace Game1
 
 		GameState gamestate;
 		float timeSpentInEndScreen = 0;
-		int currentLevel = 0;
+		public int currentLevel = 0;
 		List<string> allLevelFilenames = new List<string>();
 
 		private Level level;
@@ -134,7 +134,6 @@ namespace Game1
 
 			base.Initialize();
 		}
-
 
 		protected override void LoadContent() {
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -227,6 +226,8 @@ namespace Game1
 		{
 			if (bridge == null)
 				return;
+
+			bridge.platform.sendMessage(PlatformMessage.GameReady);
 		}
 
 		void OnVisibilityStateChanged(VisibilityState visibilityState)
@@ -239,6 +240,8 @@ namespace Game1
 				MediaPlayer.Pause();
             }
         }
+
+		int _musicStartDelay = 0;
 
 		// Logic update.
 		protected override void Update(GameTime gameTime) {
@@ -254,13 +257,6 @@ namespace Game1
 			if (gamestate == GameState.WelcomeScreen) {
 				if (InputSystem.IsAnyButtonDown()) {
 					gamestate = GameState.Playing;
-
-					if (!_isMusicStarted)
-					{
-                        MediaPlayer.IsRepeating = true;
-                        MediaPlayer.Play(song);
-                        _isMusicStarted = true;
-					}
 				}
 			}
 			else if (gamestate == GameState.EndScreen) {
@@ -273,7 +269,20 @@ namespace Game1
 				}
 			}
 			else if (gamestate == GameState.Playing) {
-				snow.update(dt);
+				if (_musicStartDelay > 10)
+				{
+					if (!_isMusicStarted)
+					{
+						MediaPlayer.IsRepeating = true;
+						MediaPlayer.Play(song);
+						_isMusicStarted = true;
+					}
+				} else
+				{
+					_musicStartDelay++;
+				}
+
+                snow.update(dt);
 
 				if (level == null) {
 
@@ -299,8 +308,6 @@ namespace Game1
 				}
 			}
 
-
-			// Cache the input state in order to find presses and releases.
 			InputSystem.Update();
 
 			base.Update(gameTime);
@@ -336,20 +343,24 @@ namespace Game1
 
 			base.Draw(gameTime);
 
-#if true
-			if (isMobile)
+#if false
+            if (isMobile)
 			{
-				var str = "Touches:\n";
+				var str = "Logs:\n";
 
-				str += "is gesture available: " + TouchPanel.IsGestureAvailable + "\n";
+				str += InputSystem.GetLog();
 
-				foreach (var touch in TouchPanel.GetState())
-				{
-					str += touch.State.ToString() + "\n";
-				}
+				//str += "Touches:\n";
 
-				str += "Mouse:\n";
-				str += Mouse.GetState().LeftButton + "\n";
+				//str += "is gesture available: " + TouchPanel.IsGestureAvailable + "\n";
+
+				//foreach (var touch in TouchPanel.GetState())
+				//{
+				//	str += touch.State.ToString() + "\n";
+				//}
+
+				//str += "Mouse:\n";
+				//str += Mouse.GetState().LeftButton + "\n";
 
 				_spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, RasterizerState.CullNone, null);
 				_spriteBatch.DrawString(spriteFont, str, new Vector2(100, 100), Color.White);
@@ -357,6 +368,8 @@ namespace Game1
 			}
 #endif
         }
+
+		public static List<string> logs = new();
 
 		// Draw the Level.
 		protected void DrawLevel(GameTime gameTime) {

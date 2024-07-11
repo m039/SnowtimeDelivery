@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace InstantGamesBridge
 {
     public enum VisibilityState
@@ -10,6 +12,16 @@ namespace InstantGamesBridge
         Desktop, Mobile, Tablet, TV
     }
 
+    public enum PlatformMessage
+    {
+        GameReady,
+        InGameLoadingStarted,
+        InGameLoadingStopped,
+        GameplayStarted,
+        GameplayStopped,
+        PlayerGotAchievement
+    }
+
     public interface IDeviceModule
     {
         public DeviceType type { get; }
@@ -20,6 +32,8 @@ namespace InstantGamesBridge
         string id { get; }
 
         string language { get; }
+
+        void sendMessage(PlatformMessage message);
     }
 
     public interface IGameModule
@@ -29,6 +43,12 @@ namespace InstantGamesBridge
         System.Action<VisibilityState> onVisibilityStateCahged { get; set; }
     }
 
+    public interface ILeaderboardModule
+    {
+        bool isSupported { get; }
+        void setScore(Dictionary<string, object> options);
+    }
+
     public interface IBridge
     {
         IPlatformModule platform { get; }
@@ -36,5 +56,7 @@ namespace InstantGamesBridge
         IGameModule game { get; }
 
         IDeviceModule device { get; }
+
+        ILeaderboardModule leaderboard { get; }
     }
 }

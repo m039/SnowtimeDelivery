@@ -89,12 +89,24 @@
             return bridge.platform.language;
         }
 
+        function bridgePlatformSendMessage(message) {
+            return bridge.platform.sendMessage(message);
+        }
+
         function bridgeGameVisibilityState() {
             return bridge.game.visibilityState;
         }
 
         function bridgeDeviceType() {
             return bridge.device.type;
+        }
+
+        function bridgeLeaderboardSetScore(options) {
+            bridge.leaderboard.setScore(JSON.parse(options));
+        }
+
+        function bridgeLeaderboardIsSupported() {
+            return bridge.leaderboard.isSupported;
         }
 
         function tickJS()
@@ -115,9 +127,7 @@
             // disable context menu on right click
             canvas.addEventListener("contextmenu", e => e.preventDefault());
 
-            window.theInstance.invokeMethod('OnTouchStart', 0, 0, 0);
-
-            holder.addEventListener(
+            window.addEventListener(
                 "touchstart",
                 (ev) => {
                     for (let i = 0; i < ev.touches.length; i++) {
@@ -128,23 +138,33 @@
                 false,
             );
 
-            holder.addEventListener(
+            window.addEventListener(
                 "touchcancel",
                 (ev) => {
+                    window.theInstance.invokeMethod('OnTouchCancel');
+                },
+                false,
+            );
+
+            window.addEventListener(
+                "touchend",
+                (ev) => {
+                    window.theInstance.invokeMethod('OnTouchCancel');
+
                     for (let i = 0; i < ev.touches.length; i++) {
                         let t = ev.touches[i];
-                        window.theInstance.invokeMethod('OnTouchCancel', t.identifier);
+                        window.theInstance.invokeMethod('OnTouchStart', t.identifier, t.clientX, t.clientY);
                     }
                 },
                 false,
             );
 
-            holder.addEventListener(
-                "touchend",
+            window.addEventListener(
+                "touchmove",
                 (ev) => {
                     for (let i = 0; i < ev.touches.length; i++) {
                         let t = ev.touches[i];
-                        window.theInstance.invokeMethod('OnTouchCancel', t.identifier);
+                        window.theInstance.invokeMethod('OnTouchStart', t.identifier, t.clientX, t.clientY);
                     }
                 },
                 false,

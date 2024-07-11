@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
 using System.Reflection;
+using System.Runtime.Versioning;
 
 namespace Game1
 {
@@ -238,6 +239,20 @@ namespace Game1
 					if (areAllLeteterCollected && u.level.isComplete == false) {
 						u.level.isComplete = true;
 						u.game.levelWinSfx.Play();
+
+						if (u.game.bridge != null && u.game.bridge.leaderboard.isSupported)
+						{
+							if (u.game.bridge.platform.id == "yandex")
+							{
+								var options = new Dictionary<string, object>
+                                {
+                                    { "leaderboardName", "CompletedLevels" },
+                                    { "score", u.game.currentLevel + 1}
+                                };
+
+								u.game.bridge.leaderboard.setScore(options);
+							}
+						}
 					}
 				}
 			}

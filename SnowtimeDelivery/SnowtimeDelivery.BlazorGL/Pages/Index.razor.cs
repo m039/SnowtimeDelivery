@@ -1,9 +1,11 @@
 using Game1;
 using InstantGamesBridge;
 using Microsoft.JSInterop;
-using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.Json;
 
 namespace SnowtimeDelivery.Pages
 {
@@ -56,15 +58,15 @@ namespace SnowtimeDelivery.Pages
         }
 
         [JSInvokable]
-        public void OnTouchStart(int id, int x, int y)
+        public void OnTouchStart(int id, float x, float y)
         {
-            InputSystem.TouchStarted(id, x, y);
+            InputSystem.TouchStart(id, (int)x, (int)y);
         }
 
         [JSInvokable]
-        public void OnTouchCancel(int id)
+        public void OnTouchCancel()
         {
-            InputSystem.TouchCancel(id);
+            InputSystem.TouchCancel();
         }
 
         public class PlatformModule : IPlatformModule
@@ -79,6 +81,11 @@ namespace SnowtimeDelivery.Pages
             public string id => bridge.js.Invoke<string>("bridgePlatformId");
 
             public string language => bridge.js.Invoke<string>("bridgePlatformLanguage");
+
+            public void sendMessage(PlatformMessage message)
+            {
+                bridge.js.InvokeVoidAsync("bridgePlatformSendMessage", BridgeExtensions.ToString(message));
+            }
         }
 
         public class GameModule : IGameModule
@@ -107,6 +114,23 @@ namespace SnowtimeDelivery.Pages
             public DeviceType type => BridgeExtensions.ParseDeviceType(bridge.js.Invoke<string>("bridgeDeviceType"));
         }
 
+        public class LeaderboardModule : ILeaderboardModule
+        {
+            readonly Bridge bridge;
+
+            public LeaderboardModule(Bridge bridge)
+            {
+                this.bridge = bridge;
+            }
+
+            public bool isSupported => bridge.js.Invoke<bool>("bridgeLeaderboardIsSupported");
+
+            public void setScore(Dictionary<string, object> options)
+            {
+                bridge.JsAsync.InvokeVoidAsync("bridgeLeaderboardSetScore", JsonSerializer.Serialize(options));
+            }
+        }
+
         public class Bridge : IBridge
         {
             readonly IPlatformModule _platform;
@@ -117,12 +141,15 @@ namespace SnowtimeDelivery.Pages
 
             readonly IDeviceModule _device;
 
+            readonly ILeaderboardModule _leaderboard;
+
             public Bridge(Index index)
             {
                 _index = index;
                 _platform = new PlatformModule(this);
                 _game = new GameModule(this);
                 _device = new DeviceModule(this);
+                _leaderboard = new LeaderboardModule(this);
             }
 
             public IJSRuntime JsAsync => _index.JsRuntime;
@@ -134,6 +161,8 @@ namespace SnowtimeDelivery.Pages
             public IGameModule game => _game;
 
             public IDeviceModule device => _device;
+
+            public ILeaderboardModule leaderboard => _leaderboard;
         }
     }
 
@@ -165,6 +194,17 @@ namespace SnowtimeDelivery.Pages
             else
             {
                 return VisibilityState.Hidden;
+            }
+        }
+
+        public static string ToString(PlatformMessage message)
+        {
+            switch (message)
+            {
+                case PlatformMessage.GameReady:
+                    return "game_ready";
+                default:
+                    throw new NotImplementedException();
             }
         }
     }

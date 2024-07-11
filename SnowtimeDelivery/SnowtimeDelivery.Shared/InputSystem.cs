@@ -21,6 +21,8 @@ namespace Game1
 
         private static List<(int, Vector2)> s_TouchPressed = new();
 
+        private static bool CustomTouchProcessing = true;
+
         public static bool IsResetButtonDown()
         {
             return Keyboard.GetState().IsKeyDown(Keys.F5) && !s_KeyboardState.IsKeyDown(Keys.F5);
@@ -178,6 +180,7 @@ namespace Game1
                 {
                     if (rectangle.Contains(touch.Item2))
                     {
+                        result = true;
                         return true;
                     }
                 }
@@ -202,6 +205,8 @@ namespace Game1
 
         public static void Update()
         {
+            // Cache the input state in order to find presses and releases.
+
             if (IsButtonDown(buttonUpInputRectangle, out bool result))
             {
                 s_ButtonDownState = result;
@@ -211,21 +216,42 @@ namespace Game1
             s_GamePadState = InputSystem.GetCurrentGamePadState();
         }
 
-        public static void TouchStarted(int id, int x, int y)
+        public static void TouchStart(int id, int x, int y)
         {
-            s_TouchPressed.Add((id, new Vector2(x, y)));
-        }
+            if (!CustomTouchProcessing)
+                return;
 
-        public static void TouchCancel(int id)
-        {
-            for (int i = s_TouchPressed.Count - 1; i >= 0; i--)
+            for (int i = 0; i < s_TouchPressed.Count; i++)
             {
                 if (s_TouchPressed[i].Item1 == id)
                 {
-                    s_TouchPressed.RemoveAt(i);
-                    break;
+                    s_TouchPressed[i] = (id, new Vector2(x, y));
+                    return;
                 }
             }
+
+            s_TouchPressed.Add((id, new Vector2(x, y)));
+        }
+
+        public static void TouchCancel()
+        {
+            if (!CustomTouchProcessing)
+                return;
+
+            s_TouchPressed.Clear();
+        }
+
+        public static string GetLog()
+        {
+            var str = "";
+
+            for (int i = 0; i < s_TouchPressed.Count; i++)
+            {
+                var t = s_TouchPressed[i];
+                str += $"{i} => id: {t.Item1}, p: {t.Item2}\n";
+            }
+
+            return str;
         }
     }
 }
