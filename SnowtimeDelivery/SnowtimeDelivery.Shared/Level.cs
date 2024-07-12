@@ -84,12 +84,17 @@ namespace Game1
 			}
 		}
 
+		static readonly Dictionary<string, string> s_LevelCache = new();
+
+		static public void CacheFile(string filename) {
+			s_LevelCache.Add(filename, IOSystem.ReadFile(filename));
+        }
+
 		public static Level FromFile(string filename) {
-			string text = IOSystem.ReadFile(filename);
-			return FromText(text);
+			return FromText(s_LevelCache[filename]);
 		}
 
-		public static Level FromText(string text) {
+		static Level FromText(string text) {
 			Level level = new Level();
 
 			level.creationText = text;

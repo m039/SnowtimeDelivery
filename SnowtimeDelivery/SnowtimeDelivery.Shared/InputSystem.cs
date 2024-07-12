@@ -25,7 +25,7 @@ namespace Game1
 
         public static bool IsResetButtonDown()
         {
-            return Keyboard.GetState().IsKeyDown(Keys.F5) && !s_KeyboardState.IsKeyDown(Keys.F5);
+            return Keyboard.GetState().IsKeyDown(Keys.R) && !s_KeyboardState.IsKeyDown(Keys.R);
         }
 
         public static bool IsAnyButtonDown()

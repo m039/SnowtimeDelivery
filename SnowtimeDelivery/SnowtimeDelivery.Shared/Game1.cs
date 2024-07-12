@@ -188,6 +188,10 @@ namespace Game1
 			musicPlayer.Play(song);
 			_isMusicStarted = true;
 #endif
+			for (int i = 0; i < allLevelFilenames.Count; i++)
+			{
+				Level.CacheFile(allLevelFilenames[i]);
+            }
 
 			spriteFont = load<SpriteFont>("Arial");
 
