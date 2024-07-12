@@ -4,7 +4,6 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Snowtime Delivery</title>
     <base href="./" />
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
@@ -61,6 +60,40 @@
 
         var enableBrotliDecompression = false;
 
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+
+        window.audioContext = new AudioContext();
+        window.audioSource = audioContext.createBufferSource();
+
+        window.audioSource.connect(window.audioContext.destination);
+
+        async function start() {
+            const response = await fetch("Content/snd/Slow Stride Loop.mp3");
+            window.musicBuffer = await window.audioContext.decodeAudioData(await response.arrayBuffer());
+
+            Blazor.start({
+                loadBootResource: function (type, name, defaultUri, integrity) {
+                    if (enableBrotliDecompression === true && type !== 'dotnetjs' && location.hostname !== 'localhost') {
+                        return (async function () {
+                            const response = await fetch(defaultUri + '.br', { cache: 'no-cache' });
+                            if (!response.ok)
+                                throw new Error(response.statusText);
+                            const originalResponseBuffer = await response.arrayBuffer();
+                            const originalResponseArray = new Int8Array(originalResponseBuffer);
+                            const contentType = (type === 'dotnetwasm')
+                                ? 'application/wasm'
+                                : 'application/octet-stream';
+                            const decompressedResponseArray = BrotliDecode(originalResponseArray);
+                            return new Response(decompressedResponseArray,
+                                {
+                                    headers: { 'content-type': contentType }
+                                });
+                        })();
+                    }
+                }
+            });
+        }
+
         bridge.initialize()
             .then(() => {
                 bridge.game.on(bridge.EVENT_NAME.VISIBILITY_STATE_CHANGED,
@@ -68,27 +101,7 @@
                         window.theInstance.invokeMethod('OnVisibilityStateChanged', state);
                     });
 
-                Blazor.start({
-                    loadBootResource: function (type, name, defaultUri, integrity) {
-                        if (enableBrotliDecompression === true && type !== 'dotnetjs' && location.hostname !== 'localhost') {
-                            return (async function () {
-                                const response = await fetch(defaultUri + '.br', { cache: 'no-cache' });
-                                if (!response.ok)
-                                    throw new Error(response.statusText);
-                                const originalResponseBuffer = await response.arrayBuffer();
-                                const originalResponseArray = new Int8Array(originalResponseBuffer);
-                                const contentType = (type === 'dotnetwasm')
-                                    ? 'application/wasm'
-                                    : 'application/octet-stream';
-                                const decompressedResponseArray = BrotliDecode(originalResponseArray);
-                                return new Response(decompressedResponseArray,
-                                    {
-                                        headers: { 'content-type': contentType }
-                                    });
-                            })();
-                        }
-                    }
-                });
+                start();
             });
     </script>
 
@@ -143,32 +156,18 @@
             window.requestAnimationFrame(tickJS);
         }
 
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-
-        let audioContext = new AudioContext();
-        let audioSource = audioContext.createBufferSource();
-        audioSource.connect(audioContext.destination);
-
         function musicPlayerPlay(src) {
-            var request = new XMLHttpRequest();
-            request.open('GET', src, true);
-            request.responseType = 'arraybuffer';
-            request.onload = function () {
-                audioContext.decodeAudioData(request.response, function (response) {
-                    audioSource.buffer = response;
-                    audioSource.start(0);
-                    audioSource.loop = true;
-                }, function () { console.error('The request failed.'); });
-            }
-            request.send();
+            window.audioSource.buffer = window.musicBuffer;
+            window.audioSource.loop = true;
+            window.audioSource.start(0);            
         }
 
         function musicPlayerPause() {
-            audioContext.suspend();
+            window.audioContext.suspend();
         }
 
         function musicPlayerResume() {
-            audioContext.resume();
+            window.audioContext.resume();
         }
 
         window.initRenderJS = (instance) => {
