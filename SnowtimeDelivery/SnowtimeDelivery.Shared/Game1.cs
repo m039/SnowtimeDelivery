@@ -83,6 +83,8 @@ namespace Game1
 
 		public IYandexMetrika metrika;
 
+		IMusicPlayer musicPlayer;
+
 		public System.Action onStart;
 
 		bool _onStartCalled = false;
@@ -91,9 +93,10 @@ namespace Game1
 
         public static bool isMobile = false;
 
-		public Game1(IBridge bridge = null, IYandexMetrika metrika = null) {
+		public Game1(IBridge bridge = null, IYandexMetrika metrika = null, IMusicPlayer musicPlayer = null) {
 			this.bridge = bridge;
 			this.metrika = metrika;
+			this.musicPlayer = musicPlayer == null ? new SimpleMusicPlayer() : musicPlayer;
 
 			_fpsCounter = new FPSCounter(this);
 
@@ -179,14 +182,13 @@ namespace Game1
                 return default;
             }
 
-
             song = Content.Load<Song>("snd/Slow Stride Loop");
 
 #if !BLAZORGL
-			MediaPlayer.IsRepeating = true;
-			MediaPlayer.Play(song);
+			musicPlayer.Play(song);
 			_isMusicStarted = true;
 #endif
+
 			spriteFont = load<SpriteFont>("Arial");
 
             jumpSfx = load<SoundEffect>("snd/jump");
@@ -213,7 +215,7 @@ namespace Game1
 			iceSpikeTex = load<Texture2D>("iceSpike");
 			letterBoxTex = load<Texture2D>("letterBox");
 			letterBoxPromptTex = load<Texture2D>("letterBoxPrompt");
-			letterBoxPromptReadyTex = load<Texture2D>("letterBoxPromptReady");
+			letterBoxPromptReadyTex = load<Texture2D>("letterBoxPromptReadyFix");
 			letterTex = load<Texture2D>("letter");
 			snowmanWalkAnim = SpriteAnimation.Load("snowman_walk", Content);
 			timeswitchBlueAnim = SpriteAnimation.Load("timeSwitchBlueAnim", Content);
@@ -242,10 +244,10 @@ namespace Game1
 		{
             if (visibilityState == VisibilityState.Visible)
 			{
-				MediaPlayer.Resume();
+				musicPlayer.Resume();
             } else
 			{
-				MediaPlayer.Pause();
+				musicPlayer.Pause();
             }
         }
 
@@ -281,8 +283,7 @@ namespace Game1
 				{
 					if (!_isMusicStarted)
 					{
-						MediaPlayer.IsRepeating = true;
-						MediaPlayer.Play(song);
+						musicPlayer.Play(song);
 						_isMusicStarted = true;
 					}
 				} else

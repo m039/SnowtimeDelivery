@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)IOSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LetterBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Level.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MusicPlayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RectangleExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rectf.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Snow.cs" />

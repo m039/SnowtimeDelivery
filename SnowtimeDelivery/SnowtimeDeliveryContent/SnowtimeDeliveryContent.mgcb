@@ -475,7 +475,15 @@
 /processorParam:TextureFormat=Color
 /build:buttonUp.png
 
-#begin letterBoxPromptReady.png
+#begin Arial.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/processorParam:Smoothing=Normal
+/build:Arial.spritefont
+
+#begin letterBoxPromptReadyFix.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255, 0, 255, 255
@@ -485,13 +493,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:letterBoxPromptReady.png
-
-#begin Arial.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/processorParam:Smoothing=Normal
-/build:Arial.spritefont
+/build:letterBoxPromptReadyFix.png
 

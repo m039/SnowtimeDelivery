@@ -143,6 +143,34 @@
             window.requestAnimationFrame(tickJS);
         }
 
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+
+        let audioContext = new AudioContext();
+        let audioSource = audioContext.createBufferSource();
+        audioSource.connect(audioContext.destination);
+
+        function musicPlayerPlay(src) {
+            var request = new XMLHttpRequest();
+            request.open('GET', src, true);
+            request.responseType = 'arraybuffer';
+            request.onload = function () {
+                audioContext.decodeAudioData(request.response, function (response) {
+                    audioSource.buffer = response;
+                    audioSource.start(0);
+                    audioSource.loop = true;
+                }, function () { console.error('The request failed.'); });
+            }
+            request.send();
+        }
+
+        function musicPlayerPause() {
+            audioContext.suspend();
+        }
+
+        function musicPlayerResume() {
+            audioContext.resume();
+        }
+
         window.initRenderJS = (instance) => {
             window.theInstance = instance;
 

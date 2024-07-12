@@ -2,9 +2,12 @@ using Game1;
 using InstantGamesBridge;
 using m039;
 using Microsoft.JSInterop;
+using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Platform.Media;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text.Json;
 
 namespace SnowtimeDelivery.Pages
@@ -42,8 +45,11 @@ namespace SnowtimeDelivery.Pages
 
                 _bride = new Bridge(this);
 
-                _game = new Game1.Game1(_bride, new YandexMetrika(this));
-                _game.onStart += () => Console.SetOut(previousOut);
+                _game = new Game1.Game1(_bride, new YandexMetrika(this), new MusicPlayer(this));
+                _game.onStart += () =>
+                {
+                    Console.SetOut(previousOut);
+                };
                 _game.Run();
             }
 
@@ -69,65 +75,31 @@ namespace SnowtimeDelivery.Pages
             InputSystem.TouchCancel();
         }
 
-        public class PlatformModule : IPlatformModule
+        public class MusicPlayer : IMusicPlayer
         {
-            readonly Bridge bridge;
+            readonly Index _index;
 
-            public PlatformModule(Bridge bridge)
+            public MusicPlayer(Index index)
             {
-                this.bridge = bridge;
+                _index = index;
             }
 
-            public string id => bridge.js.Invoke<string>("bridgePlatformId");
-
-            public string language => bridge.js.Invoke<string>("bridgePlatformLanguage");
-
-            public void sendMessage(PlatformMessage message)
+            public void Pause()
             {
-                bridge.js.InvokeVoidAsync("bridgePlatformSendMessage", BridgeExtensions.ToString(message));
-            }
-        }
-
-        public class GameModule : IGameModule
-        {
-            readonly Bridge bridge;
-
-            public GameModule(Bridge bridge)
-            {
-                this.bridge = bridge;
+                _index.JsRuntime.InvokeVoidAsync("musicPlayerPause");
             }
 
-            public VisibilityState visibilityState => BridgeExtensions.ParseVisibilityState(bridge.js.Invoke<string>("bridgeGameVisibilityState"));
-
-            public Action<VisibilityState> onVisibilityStateCahged { get; set; }
-        }
-
-        public class DeviceModule : IDeviceModule
-        {
-            readonly Bridge bridge;
-
-            public DeviceModule(Bridge bridge)
+            public void Play(Song song)
             {
-                this.bridge = bridge;
-            }
-            
-            public DeviceType type => BridgeExtensions.ParseDeviceType(bridge.js.Invoke<string>("bridgeDeviceType"));
-        }
+                var streamSource = (Uri) ((IPlatformSong)song).Strategy.GetType().GetField("_streamSource", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(((IPlatformSong)song).Strategy);
 
-        public class LeaderboardModule : ILeaderboardModule
-        {
-            readonly Bridge bridge;
+                _index.JsRuntime.InvokeVoidAsync("musicPlayerPlay", streamSource.OriginalString);
 
-            public LeaderboardModule(Bridge bridge)
-            {
-                this.bridge = bridge;
             }
 
-            public bool isSupported => bridge.js.Invoke<bool>("bridgeLeaderboardIsSupported");
-
-            public void setScore(Dictionary<string, object> options)
+            public void Resume()
             {
-                bridge.JsAsync.InvokeVoidAsync("bridgeLeaderboardSetScore", JsonSerializer.Serialize(options));
+                _index.JsRuntime.InvokeVoidAsync("musicPlayerResume");
             }
         }
 
@@ -163,6 +135,68 @@ namespace SnowtimeDelivery.Pages
             public IDeviceModule device => _device;
 
             public ILeaderboardModule leaderboard => _leaderboard;
+
+            public class PlatformModule : IPlatformModule
+            {
+                readonly Bridge bridge;
+
+                public PlatformModule(Bridge bridge)
+                {
+                    this.bridge = bridge;
+                }
+
+                public string id => bridge.js.Invoke<string>("bridgePlatformId");
+
+                public string language => bridge.js.Invoke<string>("bridgePlatformLanguage");
+
+                public void sendMessage(PlatformMessage message)
+                {
+                    bridge.js.InvokeVoidAsync("bridgePlatformSendMessage", BridgeExtensions.ToString(message));
+                }
+            }
+
+            public class GameModule : IGameModule
+            {
+                readonly Bridge bridge;
+
+                public GameModule(Bridge bridge)
+                {
+                    this.bridge = bridge;
+                }
+
+                public VisibilityState visibilityState => BridgeExtensions.ParseVisibilityState(bridge.js.Invoke<string>("bridgeGameVisibilityState"));
+
+                public Action<VisibilityState> onVisibilityStateCahged { get; set; }
+            }
+
+            public class DeviceModule : IDeviceModule
+            {
+                readonly Bridge bridge;
+
+                public DeviceModule(Bridge bridge)
+                {
+                    this.bridge = bridge;
+                }
+
+                public DeviceType type => BridgeExtensions.ParseDeviceType(bridge.js.Invoke<string>("bridgeDeviceType"));
+            }
+
+            public class LeaderboardModule : ILeaderboardModule
+            {
+                readonly Bridge bridge;
+
+                public LeaderboardModule(Bridge bridge)
+                {
+                    this.bridge = bridge;
+                }
+
+                public bool isSupported => bridge.js.Invoke<bool>("bridgeLeaderboardIsSupported");
+
+                public void setScore(Dictionary<string, object> options)
+                {
+                    bridge.JsAsync.InvokeVoidAsync("bridgeLeaderboardSetScore", JsonSerializer.Serialize(options));
+                }
+            }
         }
 
         public class YandexMetrika : IYandexMetrika
