@@ -131,10 +131,12 @@ namespace Game1
 
 			// Input, don't take it if the level is complete.
 
+#if false
 			if (InputSystem.IsResetButtonDown()) {
 				u.level.isComplete = true;
 				u.level.timeSpentComplete = 100f;
 			}
+#endif
 
 			if (u.level.isComplete == false) {
 				var thumbsticks = InputSystem.GetCurrentGamePadThumbSticks();
