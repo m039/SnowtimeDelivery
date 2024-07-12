@@ -105,6 +105,10 @@ namespace Game1
 				{
                     System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("ru-RU");
                     System.Threading.Thread.CurrentThread.CurrentCulture = ci;
+                } else
+				{
+                    System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("en-US");
+                    System.Threading.Thread.CurrentThread.CurrentCulture = ci;
                 }
 
 				isMobile = bridge.device.type == DeviceType.Mobile;
@@ -232,7 +236,7 @@ namespace Game1
 				return;
 
 			bridge.platform.sendMessage(PlatformMessage.GameReady);
-		}
+        }
 
 		void OnVisibilityStateChanged(VisibilityState visibilityState)
 		{
