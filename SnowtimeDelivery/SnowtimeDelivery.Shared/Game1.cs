@@ -363,9 +363,11 @@ namespace Game1
 
 		// Draw the Level.
 		protected void DrawLevel(GameTime gameTime) {
-
 			if (level == null) {
-				return;
+                _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, RasterizerState.CullNone, null);
+                _spriteBatch.Draw(whiteTex1, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), new Color(0f, 0f, 0f, 1f));
+                _spriteBatch.End();
+                return;
 			}
 
 			Matrix proj = level.camera.GetProjectionMatrix(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
