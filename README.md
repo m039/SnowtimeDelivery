@@ -8,5 +8,5 @@ This is a KNI port of [the original game](https://github.com/ongamex/winter_game
 
 # Links
 
-* [itch.io game page](https://m039.itch.io/snowtimedelivery-kni)
-* [Yandex Games game page](https://yandex.ru/games/app/356358?draft=true&lang=ru)
+* [itch.io game page](https://m039.itch.io/snowtime-delivery)
+* [Yandex Games game page](https://yandex.ru/games/app/356358)
