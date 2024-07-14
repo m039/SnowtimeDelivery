@@ -1,4 +1,4 @@
-# Snowtime Deliver
+# Snowtime Delivery
 
 This project is a good demo of working status of browser support for XNA, MonoGame and KNI.
 
